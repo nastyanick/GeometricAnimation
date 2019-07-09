@@ -14,6 +14,7 @@
         <item name="waveColor">@color/colorAccent</item>
         <item name="waveGap">16dp</item>
         <item name="waveStrokeWidth">2dp</item>
+        <item name="waveAnimationDuration">1500</item>
     </style>
 
 </resources>

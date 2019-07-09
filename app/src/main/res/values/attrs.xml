@@ -6,5 +6,6 @@
         <attr name="waveColor" format="color"/>
         <attr name="waveGap" format="dimension"/>
         <attr name="waveStrokeWidth" format="dimension"/>
+        <attr name="waveAnimationDuration" format="integer"/>
     </declare-styleable>
 </resources>
