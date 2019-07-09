@@ -7,5 +7,6 @@
         <attr name="waveGap" format="dimension"/>
         <attr name="waveStrokeWidth" format="dimension"/>
         <attr name="waveAnimationDuration" format="integer"/>
+        <attr name="wavePointsCount" format="integer"/>
     </declare-styleable>
 </resources>

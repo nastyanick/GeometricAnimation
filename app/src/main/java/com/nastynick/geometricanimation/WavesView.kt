@@ -2,9 +2,7 @@ package com.nastynick.geometricanimation
 
 import android.animation.ValueAnimator
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PointF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.LinearInterpolator
@@ -14,8 +12,10 @@ class WavesView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private val wavePaint: Paint
     private val waveGap: Float
     private val waveAnimationDuration: Long
+    private val wavePointsCount: Int
 
     private lateinit var wavesAnimator: ValueAnimator
+    private val wavePath = Path()
 
     private var initialRadius = 0F
     private var maxRadius = 0F
@@ -29,10 +29,13 @@ class WavesView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
         waveGap = attributesArray.getDimension(R.styleable.WavesView_waveGap, 50F)
         waveAnimationDuration = attributesArray.getInt(R.styleable.WavesView_waveAnimationDuration, 1500).toLong()
+        wavePointsCount = attributesArray.getInt(R.styleable.WavesView_wavePointsCount, 20)
+
         wavePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = attributesArray.getColor(R.styleable.WavesView_waveColor, 0)
             strokeWidth = attributesArray.getDimension(R.styleable.WavesView_waveStrokeWidth, 0F)
             style = Paint.Style.STROKE
+            pathEffect = CornerPathEffect(100f)
         }
         attributesArray.recycle()
     }
@@ -69,8 +72,32 @@ class WavesView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         super.onDraw(canvas)
         var currentRadius = initialRadius + waveRaduisOffset
         while (currentRadius < maxRadius) {
-            canvas.drawCircle(centerPoint.x, centerPoint.y, currentRadius, wavePaint)
+            canvas.drawPath(createWavePath(currentRadius, wavePath), wavePaint)
             currentRadius += waveGap
         }
+    }
+
+    private fun createWavePath(radius: Float, path: Path): Path {
+        path.reset()
+        val pointDelta = 0.8f
+        val angleInRadius = 2.0 * Math.PI / wavePointsCount
+        val startAngleInRadians = 0.0
+
+        path.moveTo(
+            centerPoint.x + (radius * pointDelta * Math.cos(startAngleInRadians)).toFloat(),
+            centerPoint.y + (radius * pointDelta * Math.sin(startAngleInRadians)).toFloat()
+        )
+
+        for (i in 1 until wavePointsCount) {
+            val hypotenuse = if (i % 2 == 0) {
+                pointDelta * radius
+            } else radius
+
+            val nextX = centerPoint.x + hypotenuse * Math.cos(startAngleInRadians - angleInRadius * i)
+            val nextY = centerPoint.y + hypotenuse * Math.sin(startAngleInRadians - angleInRadius * i)
+            path.lineTo(nextX.toFloat(), nextY.toFloat())
+        }
+        path.close()
+        return path
     }
 }

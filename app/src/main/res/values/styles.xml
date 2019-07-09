@@ -15,6 +15,7 @@
         <item name="waveGap">16dp</item>
         <item name="waveStrokeWidth">2dp</item>
         <item name="waveAnimationDuration">1500</item>
+        <item name="wavePointsCount">20</item>
     </style>
 
 </resources>
